@@ -1,6 +1,7 @@
 import core.Game;
 import core.Logs;
 import core.Types;
+import game.scenes.Mask1Scene;
 import game.scenes.TestScene;
 
 #if kha_html5
@@ -16,6 +17,7 @@ class Main {
         new Game(
             new IntVec2(1300, 750),
             new TestScene(),
+            // new Mask1Scene(),
             PixelPerfect,
             'boilerplate',
             new IntVec2(320, 180),

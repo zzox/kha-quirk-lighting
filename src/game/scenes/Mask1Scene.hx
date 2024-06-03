@@ -35,10 +35,11 @@ class Mask1Scene extends Scene {
         image1.unlock();
 
         final shader = new ImageShader(Shaders.lighting_1_frag);
-        // maskId = shader.pipeline.getTextureUnit('mask');
+        maskId = shader.pipeline.getTextureUnit('mask');
+        // timeId = shader.pipeline.getConstantLocation('uTime');
         mask = Assets.images.spotlight_32;
 
-        game.setBackbufferShader(new ImageShader(Shaders.lighting_frag));
+        game.setBackbufferShader(shader);
     }
 
     override function update (delta:Float) {
@@ -48,14 +49,17 @@ class Mask1Scene extends Scene {
     }
 
     override function render (g2:Graphics, g4:kha.graphics4.Graphics) {
-        g4.setPipeline(game.backbufferPipeline);
-
-        target.clear(0, 0, 0, 256, 256, 1, 0x00000000);
-        target.g2.drawImage(mask, 0, 0);
-
-        maskId = game.backbufferPipeline.getTextureUnit('mask');
-        // timeId = game.backbufferPipeline.getConstantLocation('uTime');
+        g4.begin();
         g4.setTexture(maskId, mask);
+        g4.end();
+
+        g2.begin();
+        g2.clear();
+        // g4.setFloat(timeId, time);
+        g2.pipeline = game.backbufferPipeline;
         g2.drawImage(image1, 0, 0);
+        // g2.drawImage(mask, 0, 0);
+
+        g2.end();
     }
 }

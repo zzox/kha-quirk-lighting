@@ -9,10 +9,8 @@ out vec4 FragColor;
 uniform sampler2D mask;
 
 void main() {
-	vec4 texcolor = texture(tex, texCoord);
-    vec4 maskcolor = texture(mask, texCoord);
-	// texcolor.rgb *= color.a;
-    texcolor.bgr = texcolor.rgb;
+	vec4 texcolor = texture(tex, texCoord) * color;
+    vec4 maskcolor = texture(mask, texCoord) * color;
 
     if (maskcolor.a == 1.0) {
         discard;
