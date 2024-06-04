@@ -7,6 +7,7 @@ import kha.Image;
 import kha.Shaders;
 import kha.graphics2.Graphics;
 import kha.graphics4.ConstantLocation;
+import kha.graphics4.PipelineState;
 import kha.graphics4.TextureUnit;
 
 class Mask1Scene extends Scene {
@@ -18,6 +19,8 @@ class Mask1Scene extends Scene {
     var target:Image;
 
     var time:Float = 0;
+
+    var pipeline:PipelineState;
 
     override function create () {        
         image1 = Image.create(256, 256);
@@ -34,11 +37,12 @@ class Mask1Scene extends Scene {
         }
         image1.unlock();
 
-        final shader = new ImageShader(Shaders.lighting_1_frag);
+        final shader = new ImageShader(Shaders.lighting_vert, Shaders.lighting_1_frag);
         maskId = shader.pipeline.getTextureUnit('mask');
         // timeId = shader.pipeline.getConstantLocation('uTime');
         mask = Assets.images.spotlight_32;
 
+        pipeline = shader.pipeline;
         game.setBackbufferShader(shader);
     }
 
@@ -48,7 +52,7 @@ class Mask1Scene extends Scene {
         time += delta;
     }
 
-    override function render (g2:Graphics, g4:kha.graphics4.Graphics) {
+    override function render (g2:Graphics, g4:kha.graphics4.Graphics, clears:Bool) {
         g4.begin();
         g4.setTexture(maskId, mask);
         g4.end();
@@ -56,7 +60,7 @@ class Mask1Scene extends Scene {
         g2.begin();
         g2.clear();
         // g4.setFloat(timeId, time);
-        g2.pipeline = game.backbufferPipeline;
+        g2.pipeline = pipeline;
         g2.drawImage(image1, 0, 0);
         // g2.drawImage(mask, 0, 0);
 
